@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Wedding of Andi & Dita</title>
+    <meta name="description" content="Undangan Pernikahan Andi & Dita - Digital Wedding Invitation">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Poppins:wght@300;400;500;600&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="desktop-bg"></div>
+
+    <!-- Phone Frame -->
+    <div class="phone-container">
+        <div class="phone-frame">
+            <div class="phone-notch"></div>
+
+            <!-- COVER -->
+            <div id="cover">
+                <video autoplay muted loop playsinline id="cover-video">
+                    <source src="bgcover.mp4" type="video/mp4">
+                </video>
+                <div class="cover-overlay"></div>
+                <div class="cover-content">
+                    <div class="cover-ornament-top">❧</div>
+                    <p class="cover-subtitle">The Wedding Of</p>
+                    <h1 class="cover-names">Andi <span>&amp;</span> Dita</h1>
+                    <div class="cover-divider">
+                        <span class="line"></span>
+                        <i class="fas fa-heart"></i>
+                        <span class="line"></span>
+                    </div>
+                    <div class="cover-photo-card">
+                        <img src="g1.webp" alt="Andi & Dita" class="cover-photo-slide active">
+                        <img src="g2.webp" alt="Andi & Dita" class="cover-photo-slide">
+                        <img src="g3.webp" alt="Andi & Dita" class="cover-photo-slide">
+                    </div>
+                    <div class="guest-box">
+                        <p class="guest-label">Kepada Yth.</p>
+                        <p class="guest-name" id="guestName">Nama Tamu</p>
+                    </div>
+                    <button id="openBtn" class="btn-open" onclick="openInvitation()">
+                        <i class="fas fa-envelope-open-text"></i>
+                        <span>Buka Undangan</span>
+                    </button>
+                    <div class="cover-ornament-bottom">❧</div>
+                </div>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div id="invitation-content" class="hidden-content">
+
+                <!-- NAV DOTS -->
+                <nav id="navDots">
+                    <div class="nav-dot active" data-target="slide1"></div>
+                    <div class="nav-dot" data-target="slide2"></div>
+                    <div class="nav-dot" data-target="slide3"></div>
+                    <div class="nav-dot" data-target="slide4"></div>
+                    <div class="nav-dot" data-target="slide5"></div>
+                    <div class="nav-dot" data-target="slide6"></div>
+                    <div class="nav-dot" data-target="slide7"></div>
+                    <div class="nav-dot" data-target="slide8"></div>
+                </nav>
+
+                <!-- SLIDE 1 - Perkenalan -->
+                <section id="slide1" class="slide">
+                    <div class="slide-bg" style="background-image:url('bg1.webp')"></div>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <p class="section-label anim-right delay-1">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</p>
+                        <p class="invited-text anim-up delay-2">You Are Invited<br>To The Wedding Of</p>
+                        <div class="couple-intro anim-scale delay-3">
+                            <h2 class="groom-name-intro">Andi</h2>
+                            <span class="and-symbol">&amp;</span>
+                            <h2 class="bride-name-intro">Dita</h2>
+                        </div>
+                        <div class="couple-photo-frame anim-scale delay-4">
+                            <div class="couple-photo-frame-inner">
+                                <img src="couple.webp" alt="Andi &amp; Dita" class="couple-photo">
+                            </div>
+                        </div>
+                        <div class="event-date anim-left delay-5">
+                            <i class="fas fa-calendar-alt"></i>
+                            <p>Sabtu, 15 Agustus 2026</p>
+                        </div>
+                        <div class="countdown anim-fade delay-5" id="countdown">
+                            <div class="count-item">
+                                <span class="count-num" id="days">00</span>
+                                <span class="count-label">Hari</span>
+                            </div>
+                            <div class="count-sep">:</div>
+                            <div class="count-item">
+                                <span class="count-num" id="hours">00</span>
+                                <span class="count-label">Jam</span>
+                            </div>
+                            <div class="count-sep">:</div>
+                            <div class="count-item">
+                                <span class="count-num" id="minutes">00</span>
+                                <span class="count-label">Menit</span>
+                            </div>
+                            <div class="count-sep">:</div>
+                            <div class="count-item">
+                                <span class="count-num" id="seconds">00</span>
+                                <span class="count-label">Detik</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SLIDE 2 - Profil Mempelai -->
+                <section id="slide2" class="slide">
+                    <div class="slide-bg" style="background-image:url('bg2.webp')"></div>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content profile2-content">
+
+                        <!-- Header -->
+                        <div class="profile2-header anim-blur">
+                            <p class="profile2-eyebrow">Dengan Rahmat Allah SWT</p>
+                            <h3 class="profile2-title">Profil Mempelai</h3>
+                            <div class="profile2-title-line">
+                                <span></span><i class="fas fa-ring"></i><span></span>
+                            </div>
+                        </div>
+
+                        <!-- Groom Card -->
+                        <div class="pcard pcard--groom anim-left">
+                            <div class="pcard__photo-wrap">
+                                <img src="groom.webp" alt="Andi" class="pcard__photo">
+                                <div class="pcard__photo-shine"></div>
+                                <div class="pcard__photo-overlay"></div>
+                                <div class="pcard__corner pcard__corner--tl"></div>
+                                <div class="pcard__corner pcard__corner--br"></div>
+                            </div>
+                            <div class="pcard__body">
+                                <span class="pcard__badge"><i class="fas fa-mars"></i> Mempelai Pria</span>
+                                <h4 class="pcard__name">Andi</h4>
+                                <p class="pcard__fullname">Andi Putra Pertama</p>
+                                <div class="pcard__divider"><span></span></div>
+                                <p class="pcard__parent-label">Putra dari</p>
+                                <p class="pcard__parent">Bapak H. Ahmad<br><span class="pcard__parent-amp">&amp;</span>
+                                    Ibu Hj. Fatimah</p>
+                                <a href="#" class="pcard__ig"><i class="fab fa-instagram"></i><span>Instagram</span></a>
+                            </div>
+                        </div>
+
+                        <!-- Pemisah & -->
+                        <div class="profile2-separator anim-fade">
+                            <span class="profile2-sep-line"></span>
+                            <span class="profile2-sep-heart">
+                                <i class="fas fa-heart"></i>
+                            </span>
+                            <span class="profile2-sep-amp">&amp;</span>
+                            <span class="profile2-sep-heart">
+                                <i class="fas fa-heart"></i>
+                            </span>
+                            <span class="profile2-sep-line"></span>
+                        </div>
+
+                        <!-- Bride Card -->
+                        <div class="pcard pcard--bride anim-right">
+                            <div class="pcard__photo-wrap">
+                                <img src="bride.webp" alt="Dita" class="pcard__photo">
+                                <div class="pcard__photo-shine"></div>
+                                <div class="pcard__photo-overlay"></div>
+                                <div class="pcard__corner pcard__corner--tl"></div>
+                                <div class="pcard__corner pcard__corner--br"></div>
+                            </div>
+                            <div class="pcard__body">
+                                <span class="pcard__badge pcard__badge--bride"><i class="fas fa-venus"></i> Mempelai
+                                    Wanita</span>
+                                <h4 class="pcard__name">Dita</h4>
+                                <p class="pcard__fullname">Dita Putri Utami</p>
+                                <div class="pcard__divider"><span></span></div>
+                                <p class="pcard__parent-label">Putri dari</p>
+                                <p class="pcard__parent">Bapak H. Ibrahim<br><span
+                                        class="pcard__parent-amp">&amp;</span> Ibu Hj. Saleha</p>
+                                <a href="#" class="pcard__ig pcard__ig--bride"><i
+                                        class="fab fa-instagram"></i><span>Instagram</span></a>
+                            </div>
+                        </div>
+
+                        <!-- SLIDE 3 - Rangkaian Acara -->
+                        <section id="slide3" class="slide">
+                            <div class="slide-bg" style="background-image:url('bg2.webp')"></div>
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content ev-content">
+
+                                <!-- Header -->
+                                <div class="ev-header anim-blur">
+                                    <p class="ev-eyebrow">Insyaa Allah</p>
+                                    <h3 class="ev-title">Rangkaian Acara</h3>
+                                    <div class="ev-title-line">
+                                        <span></span><i class="fas fa-calendar-heart"></i><span></span>
+                                    </div>
+                                </div>
+
+                                <!-- Timeline -->
+                                <div class="ev-timeline">
+
+                                    <!-- Node kiri: Mappacci -->
+                                    <div class="ev-item ev-item--left anim-left delay-1">
+                                        <div class="ev-card">
+                                            <div class="ev-card__accent"></div>
+                                            <div class="ev-card__icon">
+                                                <i class="fas fa-hands-praying"></i>
+                                            </div>
+                                            <h4 class="ev-card__name">Mappacci</h4>
+                                            <div class="ev-card__date-badge">
+                                                <i class="far fa-calendar"></i> Jum'at, 14 Agustus 2026
+                                            </div>
+                                            <div class="ev-card__rows">
+                                                <div class="ev-card__row">
+                                                    <i class="far fa-clock"></i>
+                                                    <span>19:00 – 22:00 WITA</span>
+                                                </div>
+                                                <div class="ev-card__row">
+                                                    <i class="fas fa-location-dot"></i>
+                                                    <span>Kediaman Mempelai Wanita</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ev-node">
+                                            <div class="ev-node__ring"></div>
+                                            <div class="ev-node__dot"></div>
+                                        </div>
+                                        <!-- Foto sisi kanan -->
+                                        <div class="ev-photo ev-photo--right anim-right delay-2">
+                                            <div class="ev-photo__frame">
+                                                <img src="g1.webp" alt="Mappacci" class="ev-photo__img">
+                                                <div class="ev-photo__overlay"></div>
+                                                <div class="ev-photo__shimmer"></div>
+                                                <div class="ev-photo__corner ev-photo__corner--tl"></div>
+                                                <div class="ev-photo__corner ev-photo__corner--br"></div>
+                                                <div class="ev-photo__label"><i class="fas fa-hands-praying"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Garis tengah -->
+                                    <div class="ev-spine anim-fade delay-2"></div>
+
+                                    <!-- Node kanan: Akad Nikah -->
+                                    <div class="ev-item ev-item--right anim-right delay-2">
+                                        <!-- Foto sisi kiri -->
+                                        <div class="ev-photo ev-photo--left anim-left delay-3">
+                                            <div class="ev-photo__frame">
+                                                <img src="g2.webp" alt="Akad Nikah" class="ev-photo__img">
+                                                <div class="ev-photo__overlay ev-photo__overlay--akad"></div>
+                                                <div class="ev-photo__shimmer"></div>
+                                                <div class="ev-photo__corner ev-photo__corner--tl"></div>
+                                                <div class="ev-photo__corner ev-photo__corner--br"></div>
+                                                <div class="ev-photo__label ev-photo__label--akad"><i
+                                                        class="fas fa-mosque"></i></div>
+                                            </div>
+                                        </div>
+                                        <div class="ev-node">
+                                            <div class="ev-node__ring"></div>
+                                            <div class="ev-node__dot"></div>
+                                        </div>
+                                        <div class="ev-card ev-card--right">
+                                            <div class="ev-card__accent ev-card__accent--right"></div>
+                                            <div class="ev-card__icon ev-card__icon--akad">
+                                                <i class="fas fa-mosque"></i>
+                                            </div>
+                                            <h4 class="ev-card__name">Akad Nikah</h4>
+                                            <div class="ev-card__date-badge">
+                                                <i class="far fa-calendar"></i> Sabtu, 15 Agustus 2026
+                                            </div>
+                                            <div class="ev-card__rows">
+                                                <div class="ev-card__row">
+                                                    <i class="far fa-clock"></i>
+                                                    <span>08:00 – 10:00 WITA</span>
+                                                </div>
+                                                <div class="ev-card__row">
+                                                    <i class="fas fa-location-dot"></i>
+                                                    <span>Masjid Al-Markaz</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Node kiri: Resepsi -->
+                                    <div class="ev-item ev-item--left anim-left delay-3">
+                                        <div class="ev-card">
+                                            <div class="ev-card__accent"></div>
+                                            <div class="ev-card__icon ev-card__icon--resepsi">
+                                                <i class="fas fa-champagne-glasses"></i>
+                                            </div>
+                                            <h4 class="ev-card__name">Resepsi</h4>
+                                            <div class="ev-card__date-badge">
+                                                <i class="far fa-calendar"></i> Sabtu, 15 Agustus 2026
+                                            </div>
+                                            <div class="ev-card__rows">
+                                                <div class="ev-card__row">
+                                                    <i class="far fa-clock"></i>
+                                                    <span>11:00 – 14:00 WITA</span>
+                                                </div>
+                                                <div class="ev-card__row">
+                                                    <i class="fas fa-location-dot"></i>
+                                                    <span>Gedung Serbaguna</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ev-node">
+                                            <div class="ev-node__ring"></div>
+                                            <div class="ev-node__dot"></div>
+                                        </div>
+                                        <!-- Foto sisi kanan -->
+                                        <div class="ev-photo ev-photo--right anim-right delay-4">
+                                            <div class="ev-photo__frame">
+                                                <img src="g3.webp" alt="Resepsi" class="ev-photo__img">
+                                                <div class="ev-photo__overlay ev-photo__overlay--resepsi"></div>
+                                                <div class="ev-photo__shimmer"></div>
+                                                <div class="ev-photo__corner ev-photo__corner--tl"></div>
+                                                <div class="ev-photo__corner ev-photo__corner--br"></div>
+                                                <div class="ev-photo__label ev-photo__label--resepsi"><i
+                                                        class="fas fa-champagne-glasses"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div><!-- /ev-timeline -->
+
+                                <a href="https://maps.google.com" target="_blank" class="ev-btn-maps anim-fade delay-4">
+                                    <i class="fas fa-map-location-dot"></i>
+                                    <span>Lihat Lokasi</span>
+                                </a>
+
+                            </div>
+                        </section>
+
+                        <!-- SLIDE 4 - Kisah Pertemuan -->
+                        <section id="slide4" class="slide">
+                            <div class="slide-bg" style="background-image:url('bg4.webp')"></div>
+                            <div class="slide-overlay s4-overlay"></div>
+
+                            <!-- Floating petals decoration -->
+                            <div class="s4-petals" aria-hidden="true">
+                                <span class="s4-petal"></span><span class="s4-petal"></span>
+                                <span class="s4-petal"></span><span class="s4-petal"></span>
+                                <span class="s4-petal"></span><span class="s4-petal"></span>
+                            </div>
+
+                            <div class="slide-content s4-content">
+
+                                <!-- Header -->
+                                <div class="s4-header anim-blur">
+                                    <p class="s4-eyebrow">Our Love Story</p>
+                                    <h3 class="s4-title">Kisah Pertemuan</h3>
+                                    <div class="s4-title-deco">
+                                        <span></span>
+                                        <i class="fas fa-heart-pulse"></i>
+                                        <span></span>
+                                    </div>
+                                </div>
+
+                                <!-- Story cards -->
+                                <div class="s4-stories">
+
+                                    <!-- Card 1 -->
+                                    <div class="s4-card anim-left delay-1">
+                                        <div class="s4-card__photo-wrap">
+                                            <img src="g4.webp" alt="Pertama Bertemu" class="s4-card__photo">
+                                            <div class="s4-card__photo-shine"></div>
+                                            <div class="s4-card__year-tag">2022</div>
+                                        </div>
+                                        <div class="s4-card__body">
+                                            <div class="s4-card__icon-row">
+                                                <div class="s4-card__icon"><i class="fas fa-heart"></i></div>
+                                                <span class="s4-card__date">Januari 2022</span>
+                                            </div>
+                                            <h4 class="s4-card__title">Pertama Bertemu</h4>
+                                            <p class="s4-card__text">Kami pertama kali bertemu di sebuah acara keluarga.
+                                                Pandangan pertama yang tak akan pernah terlupakan.</p>
+                                            <div class="s4-card__bar"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 2 -->
+                                    <div class="s4-card s4-card--alt anim-right delay-2">
+                                        <div class="s4-card__body s4-card__body--right">
+                                            <div class="s4-card__icon-row s4-card__icon-row--right">
+                                                <span class="s4-card__date">Maret 2022</span>
+                                                <div class="s4-card__icon s4-card__icon--alt"><i
+                                                        class="fas fa-comments"></i></div>
+                                            </div>
+                                            <h4 class="s4-card__title">Mulai Dekat</h4>
+                                            <p class="s4-card__text">Dari percakapan singkat menjadi obrolan panjang
+                                                setiap malam. Kami mulai mengenal satu sama lain lebih dalam.</p>
+                                            <div class="s4-card__bar s4-card__bar--right"></div>
+                                        </div>
+                                        <div class="s4-card__photo-wrap">
+                                            <img src="g5.webp" alt="Mulai Dekat" class="s4-card__photo">
+                                            <div class="s4-card__photo-shine"></div>
+                                            <div class="s4-card__year-tag s4-card__year-tag--right">2022</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 3 -->
+                                    <div class="s4-card anim-left delay-3">
+                                        <div class="s4-card__photo-wrap">
+                                            <img src="g1.webp" alt="Lamaran" class="s4-card__photo">
+                                            <div class="s4-card__photo-shine"></div>
+                                            <div class="s4-card__year-tag">2025</div>
+                                        </div>
+                                        <div class="s4-card__body">
+                                            <div class="s4-card__icon-row">
+                                                <div class="s4-card__icon s4-card__icon--ring"><i
+                                                        class="fas fa-ring"></i></div>
+                                                <span class="s4-card__date">Desember 2025</span>
+                                            </div>
+                                            <h4 class="s4-card__title">Lamaran</h4>
+                                            <p class="s4-card__text">Dengan restu kedua orang tua, kami memutuskan
+                                                melangkah ke jenjang yang lebih serius.</p>
+                                            <div class="s4-card__bar"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 4 -->
+                                    <div class="s4-card s4-card--alt anim-right delay-4">
+                                        <div class="s4-card__body s4-card__body--right">
+                                            <div class="s4-card__icon-row s4-card__icon-row--right">
+                                                <span class="s4-card__date">Agustus 2026</span>
+                                                <div class="s4-card__icon s4-card__icon--mosque"><i
+                                                        class="fas fa-mosque"></i></div>
+                                            </div>
+                                            <h4 class="s4-card__title">Pernikahan</h4>
+                                            <p class="s4-card__text">InsyaAllah kami akan menyatukan langkah dalam
+                                                ikatan suci pernikahan yang penuh berkah.</p>
+                                            <div class="s4-card__bar s4-card__bar--right"></div>
+                                        </div>
+                                        <div class="s4-card__photo-wrap">
+                                            <img src="g2.webp" alt="Pernikahan" class="s4-card__photo">
+                                            <div class="s4-card__photo-shine"></div>
+                                            <div class="s4-card__year-tag s4-card__year-tag--right">2026</div>
+                                        </div>
+                                    </div>
+
+                                </div><!-- /s4-stories -->
+
+                                <!-- Bottom quote -->
+                                <div class="s4-quote anim-fade delay-5">
+                                    <i class="fas fa-quote-left s4-quote__icon"></i>
+                                    <p>Dan dijadikan-Nya di antaramu rasa kasih dan sayang</p>
+                                    <span>— QS. Ar-Rum: 21 —</span>
+                                </div>
+
+                            </div>
+                        </section>
+
+                        <!-- SLIDE 5 - Gallery -->
+                        <section id="slide5" class="slide">
+                            <div class="slide-bg" style="background-image:url('bg5.webp')"></div>
+                            <div class="slide-overlay"></div>
+
+                            <!-- Floating bokeh orbs -->
+                            <div class="gl-bokeh" aria-hidden="true">
+                                <span class="gl-orb"></span><span class="gl-orb"></span>
+                                <span class="gl-orb"></span><span class="gl-orb"></span>
+                                <span class="gl-orb"></span>
+                            </div>
+
+                            <div class="slide-content gl-content">
+
+                                <!-- Header -->
+                                <div class="gl-header anim-blur">
+                                    <p class="gl-eyebrow">Our Precious Moments</p>
+                                    <h3 class="gl-title">Gallery Foto</h3>
+                                    <div class="gl-title-line">
+                                        <span></span>
+                                        <i class="fas fa-camera-retro"></i>
+                                        <span></span>
+                                    </div>
+                                </div>
+
+                                <!-- Masonry-style gallery -->
+                                <div class="gl-grid">
+
+                                    <!-- Featured large photo -->
+                                    <div class="gl-item gl-featured anim-fade delay-1" onclick="openLightbox(this)">
+                                        <div class="gl-frame">
+                                            <img src="g1.webp" alt="Gallery 1" class="gl-img">
+                                            <div class="gl-shimmer"></div>
+                                            <div class="gl-overlay">
+                                                <div class="gl-overlay-content">
+                                                    <i class="fas fa-expand-alt"></i>
+                                                    <span>Lihat Foto</span>
+                                                </div>
+                                            </div>
+                                            <div class="gl-corner gl-corner--tl"></div>
+                                            <div class="gl-corner gl-corner--br"></div>
+                                            <div class="gl-label"><i class="fas fa-heart"></i></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Two-column pair row -->
+                                    <div class="gl-row-pair">
+                                        <div class="gl-item gl-portrait anim-left delay-2" onclick="openLightbox(this)">
+                                            <div class="gl-frame">
+                                                <img src="g2.webp" alt="Gallery 2" class="gl-img">
+                                                <div class="gl-shimmer"></div>
+                                                <div class="gl-overlay">
+                                                    <div class="gl-overlay-content">
+                                                        <i class="fas fa-expand-alt"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="gl-corner gl-corner--tl"></div>
+                                                <div class="gl-corner gl-corner--br"></div>
+                                            </div>
+                                        </div>
+                                        <div class="gl-item gl-portrait anim-right delay-2"
+                                            onclick="openLightbox(this)">
+                                            <div class="gl-frame">
+                                                <img src="g3.webp" alt="Gallery 3" class="gl-img">
+                                                <div class="gl-shimmer"></div>
+                                                <div class="gl-overlay">
+                                                    <div class="gl-overlay-content">
+                                                        <i class="fas fa-expand-alt"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="gl-corner gl-corner--tl"></div>
+                                                <div class="gl-corner gl-corner--br"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Wide panoramic photo -->
+                                    <div class="gl-item gl-wide anim-up delay-3" onclick="openLightbox(this)">
+                                        <div class="gl-frame">
+                                            <img src="g4.webp" alt="Gallery 4" class="gl-img">
+                                            <div class="gl-shimmer"></div>
+                                            <div class="gl-overlay">
+                                                <div class="gl-overlay-content">
+                                                    <i class="fas fa-expand-alt"></i>
+                                                    <span>Lihat Foto</span>
+                                                </div>
+                                            </div>
+                                            <div class="gl-corner gl-corner--tl"></div>
+                                            <div class="gl-corner gl-corner--br"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Single square -->
+                                    <div class="gl-item gl-square anim-fade delay-4" onclick="openLightbox(this)">
+                                        <div class="gl-frame">
+                                            <img src="g5.webp" alt="Gallery 5" class="gl-img">
+                                            <div class="gl-shimmer"></div>
+                                            <div class="gl-overlay">
+                                                <div class="gl-overlay-content">
+                                                    <i class="fas fa-expand-alt"></i>
+                                                    <span>Lihat Foto</span>
+                                                </div>
+                                            </div>
+                                            <div class="gl-corner gl-corner--tl"></div>
+                                            <div class="gl-corner gl-corner--br"></div>
+                                            <div class="gl-label gl-label--star"><i class="fas fa-star"></i></div>
+                                        </div>
+                                    </div>
+
+                                </div><!-- /gl-grid -->
+
+                                <!-- Bottom quote -->
+                                <div class="gl-quote anim-fade delay-5">
+                                    <i class="fas fa-camera gl-quote__icon"></i>
+                                    <p>Setiap foto menyimpan seribu kenangan indah</p>
+                                </div>
+
+                            </div>
+                        </section>
+
+                        <!-- SLIDE 6 - Wedding Gift -->
+                        <section id="slide6" class="slide">
+                            <div class="slide-bg" style="background-image:url('bg4.webp')"></div>
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content">
+                                <h3 class="section-title anim-fade">Wedding Gift</h3>
+                                <div class="ornament-divider anim-fade">✦</div>
+                                <p class="gift-text anim-fade">Doa restu Anda merupakan karunia yang sangat berarti bagi
+                                    kami.
+                                    Namun jika Anda ingin memberikan tanda kasih, kami menyediakan informasi berikut:
+                                </p>
+                                <div class="gift-card anim-fade">
+                                    <div class="gift-icon"><i class="fas fa-building-columns"></i></div>
+                                    <h4>Bank BRI</h4>
+                                    <p class="gift-account">1234 5678 9012 3456</p>
+                                    <p class="gift-holder">a.n. Andi Putra Pertama</p>
+                                    <button class="btn-copy" onclick="copyText('1234567890123456')">
+                                        <i class="far fa-copy"></i> Salin
+                                    </button>
+                                </div>
+                                <div class="gift-card anim-fade">
+                                    <div class="gift-icon"><i class="fas fa-building-columns"></i></div>
+                                    <h4>Bank BNI</h4>
+                                    <p class="gift-account">0987 6543 2109 8765</p>
+                                    <p class="gift-holder">a.n. Dita Putri Utami</p>
+                                    <button class="btn-copy" onclick="copyText('0987654321098765')">
+                                        <i class="far fa-copy"></i> Salin
+                                    </button>
+                                </div>
+                                <div class="gift-card anim-fade">
+                                    <div class="gift-icon"><i class="fas fa-gift"></i></div>
+                                    <h4>Kirim Hadiah</h4>
+                                    <p class="gift-address">Jl. Contoh Alamat No. 123, Kota, Provinsi</p>
+                                    <button class="btn-copy"
+                                        onclick="copyText('Jl. Contoh Alamat No. 123, Kota, Provinsi')">
+                                        <i class="far fa-copy"></i> Salin Alamat
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- SLIDE 7 - Kirim Ucapan -->
+                        <section id="slide7" class="slide">
+                            <div class="slide-bg" style="background-image:url('bg5.webp')"></div>
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content">
+                                <h3 class="section-title anim-fade">Kirim Ucapan</h3>
+                                <div class="ornament-divider anim-fade">✦</div>
+                                <form id="messageForm" class="message-form anim-fade" onsubmit="submitMessage(event)">
+                                    <div class="form-group">
+                                        <input type="text" id="msgName" placeholder="Nama Anda" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <select id="msgAttend">
+                                            <option value="">Konfirmasi Kehadiran</option>
+                                            <option value="Hadir">✅ Hadir</option>
+                                            <option value="Tidak Hadir">❌ Tidak Hadir</option>
+                                            <option value="Masih Ragu">🤔 Masih Ragu</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea id="msgText" placeholder="Tulis ucapan..." rows="3"
+                                            required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn-send">
+                                        <i class="fas fa-paper-plane"></i> Kirim Ucapan
+                                    </button>
+                                </form>
+                                <div class="messages-list anim-fade" id="messagesList">
+                                    <!-- Messages will be loaded here -->
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- SLIDE 8 - Ucapan Terimakasih -->
+                        <section id="slide8" class="slide credits-slide">
+                            <video autoplay muted loop playsinline class="slide-bg-video">
+                                <source src="bgcover.mp4" type="video/mp4">
+                            </video>
+                            <div class="slide-overlay dark-overlay"></div>
+
+                            <!-- Fade mask top & bottom -->
+                            <div class="credits-fade-top"></div>
+                            <div class="credits-fade-bottom"></div>
+
+                            <!-- Scrolling credits track -->
+                            <div class="credits-viewport">
+                                <div class="credits-track" id="creditsTrack">
+
+                                    <!-- Ornamen pembuka -->
+                                    <div class="credits-ornament">❧</div>
+
+                                    <!-- Ayat Al-Quran -->
+                                    <div class="credits-block">
+                                        <p class="credits-arabic">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ
+                                            أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
+                                        </p>
+                                        <p class="credits-ref">— QS. Ar-Rum: 21 —</p>
+                                        <p class="credits-translation">"Dan di antara tanda-tanda kebesaran-Nya ialah
+                                            Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu
+                                            cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa
+                                            kasih dan sayang."</p>
+                                    </div>
+
+                                    <div class="credits-divider"><span></span><i class="fas fa-heart"></i><span></span>
+                                    </div>
+
+                                    <!-- Terima Kasih -->
+                                    <div class="credits-block">
+                                        <p class="credits-label">Dengan Penuh Syukur</p>
+                                        <h3 class="credits-title">Terima Kasih</h3>
+                                        <p class="credits-body">Merupakan suatu kehormatan dan kebahagiaan bagi kami
+                                            apabila Bapak / Ibu / Saudara/i berkenan hadir untuk memberikan doa restu
+                                            kepada kami.</p>
+                                    </div>
+
+                                    <div class="credits-divider"><span></span><i class="fas fa-ring"></i><span></span>
+                                    </div>
+
+                                    <!-- Nama mempelai -->
+                                    <div class="credits-block">
+                                        <p class="credits-label">Mempelai</p>
+                                        <div class="credits-names">
+                                            <span>Andi</span>
+                                            <span class="credits-amp">&amp;</span>
+                                            <span>Dita</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="credits-divider"><span></span><i class="fas fa-star"></i><span></span>
+                                    </div>
+
+                                    <!-- Orang tua -->
+                                    <div class="credits-block">
+                                        <p class="credits-label">Keluarga Mempelai Pria</p>
+                                        <p class="credits-name-small">Bapak H. Ahmad</p>
+                                        <p class="credits-name-small">&amp; Ibu Hj. Fatimah</p>
+                                    </div>
+
+                                    <div class="credits-block">
+                                        <p class="credits-label">Keluarga Mempelai Wanita</p>
+                                        <p class="credits-name-small">Bapak H. Ibrahim</p>
+                                        <p class="credits-name-small">&amp; Ibu Hj. Saleha</p>
+                                    </div>
+
+                                    <div class="credits-divider"><span></span><i class="fas fa-mosque"></i><span></span>
+                                    </div>
+
+                                    <!-- Acara -->
+                                    <div class="credits-block">
+                                        <p class="credits-label">Akad Nikah</p>
+                                        <p class="credits-detail">Sabtu, 15 Agustus 2026</p>
+                                        <p class="credits-detail">08:00 – 10:00 WITA</p>
+                                        <p class="credits-detail">Masjid Al-Markaz</p>
+                                    </div>
+
+                                    <div class="credits-block">
+                                        <p class="credits-label">Resepsi</p>
+                                        <p class="credits-detail">Sabtu, 15 Agustus 2026</p>
+                                        <p class="credits-detail">11:00 – 14:00 WITA</p>
+                                        <p class="credits-detail">Gedung Serbaguna</p>
+                                    </div>
+
+                                    <div class="credits-divider"><span></span><i class="fas fa-heart"></i><span></span>
+                                    </div>
+
+                                    <!-- Penutup -->
+                                    <div class="credits-block">
+                                        <p class="credits-closing-text">Wassalamu'alaikum Warahmatullahi Wabarakatuh</p>
+                                        <div class="credits-ornament">❧</div>
+                                        <p class="credits-brand">Digital Wedding Invitation by</p>
+                                        <p class="credits-brand-name">War Digital</p>
+                                    </div>
+
+                                    <!-- Spacer akhir -->
+                                    <div style="height:60px"></div>
+
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- FOOTER -->
+                        <footer class="invitation-footer">
+                            <div class="footer-content">
+                                <p class="footer-brand">Created with <i class="fas fa-heart"></i> by</p>
+                                <h4 class="footer-logo">War Digital</h4>
+                                <a href="https://instagram.com/war.digital_" target="_blank" class="footer-ig">
+                                    <i class="fab fa-instagram"></i> @war.digital_
+                                </a>
+                            </div>
+                        </footer>
+
+                    </div>
+            </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <img id="lightbox-img" src="" alt="Gallery">
+        </div>
+
+        <!-- Toast -->
+        <div id="toast" class="toast">Tersalin!</div>
+
+        <script src="script.js"></script>
+</body>
+
+</html>
