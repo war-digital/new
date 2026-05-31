@@ -39,23 +39,14 @@ setInterval(updateCountdown, 1000);
 
 // ===== Scroll Animations =====
 const observer = new IntersectionObserver((entries) => {
-
     entries.forEach(entry => {
-
         if (entry.isIntersecting) {
-
             entry.target.classList.add('visible');
-
-        } else {
-
-            entry.target.classList.remove('visible');
-
+            observer.unobserve(entry.target); // sekali muncul, selesai
         }
-
     });
-
 }, {
-    threshold: 0.15,
+    threshold: 0.1,
     root: document.getElementById('invitation-content')
 });
 
@@ -71,12 +62,11 @@ function initObservers() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-            } else {
-                entry.target.classList.remove('visible');
+                pcardObserver.unobserve(entry.target);
             }
         });
     }, {
-        threshold: 0.2,
+        threshold: 0.1,
         root: document.getElementById('invitation-content')
     });
 
@@ -87,12 +77,11 @@ function initObservers() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-            } else {
-                entry.target.classList.remove('visible');
+                evPhotoObserver.unobserve(entry.target);
             }
         });
     }, {
-        threshold: 0.15,
+        threshold: 0.08,
         root: document.getElementById('invitation-content')
     });
     document.querySelectorAll('.ev-photo').forEach(el => evPhotoObserver.observe(el));
@@ -102,27 +91,67 @@ function initObservers() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-            } else {
-                entry.target.classList.remove('visible');
+                s4Observer.unobserve(entry.target);
             }
         });
     }, {
-        threshold: 0.15,
+        threshold: 0.08,
         root: document.getElementById('invitation-content')
     });
     document.querySelectorAll('.s4-card').forEach(el => s4Observer.observe(el));
+
+    // ===== Slide 2 — Cinematic sequential reveal (sekali muncul, tidak hilang) =====
+    const s2Root = document.getElementById('invitation-content');
+    let s2Played = false;
+
+    const s2TriggerObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !s2Played) {
+                s2Played = true;
+
+                // 1. Header langsung muncul
+                const header  = document.querySelector('#slide2 .s2-header');
+                const groom   = document.querySelector('.s2-profile--groom');
+                const divider = document.querySelector('.s2-divider-wrap');
+                const bride   = document.querySelector('.s2-profile--bride');
+
+                if (header) header.classList.add('visible');
+
+                // 2. Groom row setelah 0.4s
+                setTimeout(() => {
+                    if (groom) groom.classList.add('visible');
+
+                    // 3. Divider setelah groom selesai animasi (~1.8s)
+                    setTimeout(() => {
+                        if (divider) divider.classList.add('visible');
+
+                        // 4. Bride row setelah divider (~0.7s)
+                        setTimeout(() => {
+                            if (bride) bride.classList.add('visible');
+                        }, 700);
+                    }, 1800);
+                }, 400);
+
+                // Setelah semua muncul, hentikan observer
+                s2TriggerObs.disconnect();
+            }
+        });
+    }, { threshold: 0.05, root: s2Root });
+
+    // Observe slide2 itu sendiri sebagai trigger
+    const slide2El = document.getElementById('slide2');
+    if (slide2El) s2TriggerObs.observe(slide2El);
 
     // Observe gl-item elements for gallery entrance animation
     const glObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-            } else {
-                entry.target.classList.remove('visible');
+                glObserver.unobserve(entry.target);
             }
         });
     }, {
-        threshold: 0.1,
+        threshold: 0.08,
         root: document.getElementById('invitation-content')
     });
     document.querySelectorAll('.gl-item').forEach(el => glObserver.observe(el));
@@ -137,10 +166,32 @@ const contentEl = document.getElementById('invitation-content');
 const slides = document.querySelectorAll('.slide');
 const dots = document.querySelectorAll('.nav-dot');
 
+// ===== Smooth scroll ke slide via container (bukan window) =====
+function smoothScrollTo(targetEl, duration) {
+    const container = document.getElementById('invitation-content');
+    const start = container.scrollTop;
+    const end = targetEl.offsetTop;
+    const change = end - start;
+    const startTime = performance.now();
+
+    function ease(t) {
+        // ease in-out cubic — terasa natural, tidak tiba-tiba
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function step(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        container.scrollTop = start + change * ease(progress);
+        if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
 dots.forEach(dot => {
     dot.addEventListener('click', () => {
         const target = document.getElementById(dot.dataset.target);
-        if (target) target.scrollIntoView({ behavior: 'smooth' });
+        if (target) smoothScrollTo(target, 900);
     });
 });
 
@@ -275,3 +326,93 @@ function initCoverSlideshow() {
     }, 4000);
 }
 initCoverSlideshow();
+// ===== Parallax Background Scroll =====
+function initParallax() {
+    const scrollEl = document.getElementById('invitation-content');
+
+    function onScroll() {
+        const scrollTop = scrollEl.scrollTop;
+
+        // Handle semua .slide-bg (slide 1,3,4,5,6,7,8)
+        document.querySelectorAll('.slide').forEach(slide => {
+            const bg = slide.querySelector('.slide-bg');
+            if (!bg) return;
+            const relPos = scrollTop - slide.offsetTop;
+            // Parallax ringan — bg bergerak 15% lebih lambat dari konten
+            const parallaxY = relPos * 0.15;
+            bg.style.transform = `translateY(${parallaxY}px)`;
+        });
+
+        // Handle .s2-bg (slide 2 pakai class berbeda)
+        const slide2 = document.getElementById('slide2');
+        if (slide2) {
+            const bg2 = slide2.querySelector('.s2-bg');
+            if (bg2) {
+                const relPos = scrollTop - slide2.offsetTop;
+                const parallaxY = relPos * 0.15;
+                bg2.style.transform = `translateY(${parallaxY}px)`;
+            }
+        }
+    }
+
+    scrollEl.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+}
+
+// Jalankan setelah animasi buka undangan selesai
+const _origOpenInv = window.openInvitation;
+window.openInvitation = function () {
+    _origOpenInv && _origOpenInv();
+    setTimeout(initParallax, 950);
+};
+// ===== Background Music =====
+const bgMusic = document.getElementById('bgMusic');
+const musicBtn = document.getElementById('musicBtn');
+const musicIcon = document.getElementById('musicIcon');
+let musicPlaying = false;
+
+function setMusicState(playing) {
+    musicPlaying = playing;
+    if (playing) {
+        musicIcon.className = 'fas fa-pause';
+        musicBtn.classList.add('playing');
+    } else {
+        musicIcon.className = 'fas fa-music';
+        musicBtn.classList.remove('playing');
+    }
+}
+
+function toggleMusic() {
+    if (!bgMusic) return;
+    if (musicPlaying) {
+        bgMusic.pause();
+        setMusicState(false);
+    } else {
+        bgMusic.play().then(() => setMusicState(true)).catch(() => setMusicState(false));
+    }
+}
+
+// Mulai musik saat tombol "Buka Undangan" diklik (di dalam user gesture)
+// Override openInvitation agar musik ikut distart
+const _origOpenInvMusic = window.openInvitation;
+window.openInvitation = function () {
+    _origOpenInvMusic && _origOpenInvMusic();
+
+    // Coba putar langsung di dalam gesture (paling bisa di iOS/Android)
+    if (bgMusic) {
+        bgMusic.volume = 0;
+        bgMusic.play().then(() => {
+            setMusicState(true);
+            // Fade in volume pelan-pelan agar tidak mengejutkan
+            let vol = 0;
+            const fadeIn = setInterval(() => {
+                vol = Math.min(vol + 0.05, 0.75);
+                bgMusic.volume = vol;
+                if (vol >= 0.75) clearInterval(fadeIn);
+            }, 120);
+        }).catch(() => {
+            // Kalau masih diblokir, tampilkan tombol musik agar user bisa klik manual
+            setMusicState(false);
+        });
+    }
+};
