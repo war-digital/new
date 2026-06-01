@@ -11,6 +11,10 @@ function openInvitation() {
     content.classList.remove('hidden-content');
     content.classList.add('show-content');
     setTimeout(() => { cover.style.display = 'none'; }, 900);
+
+    // Inisialisasi observer SETELAH konten tampil & layout selesai dihitung
+    // Delay 600ms cukup untuk browser selesai render sebelum observer dipasang
+    setTimeout(initObservers, 600);
 }
 
 // ===== Countdown Timer =====
@@ -38,126 +42,74 @@ updateCountdown();
 setInterval(updateCountdown, 1000);
 
 // ===== Scroll Animations =====
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target); // sekali muncul, selesai
-        }
-    });
-}, {
-    threshold: 0.1,
-    root: document.getElementById('invitation-content')
-});
+// initObservers dipanggil dari openInvitation() — SETELAH undangan dibuka,
+// bukan saat halaman load. Ini mencegah semua elemen langsung "visible"
+// sebelum user scroll ke slide masing-masing.
 
 function initObservers() {
-    document
-        .querySelectorAll(
-            '.anim-fade, .anim-scale, .anim-left, .anim-right, .anim-up, .anim-zoom, .anim-blur'
-        )
-        .forEach(el => observer.observe(el));
+    const root = document.getElementById('invitation-content');
 
-    // Observe pcard elements for photo drop-from-top animation
-    const pcardObserver = new IntersectionObserver((entries) => {
+    // Opsi observer standar — hanya trigger saat elemen benar-benar masuk layar
+    // rootMargin negatif: elemen harus masuk 10% dari atas/bawah viewport dulu
+    const obsOpts = {
+        threshold: 0.12,
+        root,
+        rootMargin: '-5% 0px -5% 0px'
+    };
+
+    // Observer umum untuk semua kelas animasi
+    const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                pcardObserver.unobserve(entry.target);
+                observer.unobserve(entry.target);
             }
         });
-    }, {
-        threshold: 0.1,
-        root: document.getElementById('invitation-content')
+    }, obsOpts);
+
+    document.querySelectorAll(
+        '.anim-fade, .anim-scale, .anim-left, .anim-right, .anim-up, .anim-zoom, .anim-blur, ' +
+        '.pcard, .ev-photo, .s4-card, .gl-item'
+    ).forEach(el => observer.observe(el));
+
+    // ===== Slide 1 — elemen pertama langsung visible saat undangan dibuka =====
+    // (sudah di viewport, tidak perlu scroll)
+    document.querySelectorAll('#slide1 .anim-fade, #slide1 .anim-scale, #slide1 .anim-left, #slide1 .anim-right, #slide1 .anim-up, #slide1 .anim-zoom, #slide1 .anim-blur').forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), 300 + i * 120);
     });
 
-    document.querySelectorAll('.pcard').forEach(el => pcardObserver.observe(el));
-
-    // Observe ev-photo elements
-    const evPhotoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                evPhotoObserver.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.08,
-        root: document.getElementById('invitation-content')
-    });
-    document.querySelectorAll('.ev-photo').forEach(el => evPhotoObserver.observe(el));
-
-    // Observe s4-card elements
-    const s4Observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                s4Observer.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.08,
-        root: document.getElementById('invitation-content')
-    });
-    document.querySelectorAll('.s4-card').forEach(el => s4Observer.observe(el));
-
-    // ===== Slide 2 — Cinematic sequential reveal (sekali muncul, tidak hilang) =====
-    const s2Root = document.getElementById('invitation-content');
+    // ===== Slide 2 — Cinematic sequential reveal =====
     let s2Played = false;
-
     const s2TriggerObs = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting && !s2Played) {
                 s2Played = true;
-
-                // 1. Header langsung muncul
                 const header = document.querySelector('#slide2 .s2-header');
                 const groom = document.querySelector('.s2-profile--groom');
                 const divider = document.querySelector('.s2-divider-wrap');
                 const bride = document.querySelector('.s2-profile--bride');
 
                 if (header) header.classList.add('visible');
-
-                // 2. Groom row setelah 0.4s
                 setTimeout(() => {
                     if (groom) groom.classList.add('visible');
-
-                    // 3. Divider setelah groom selesai animasi (~1.8s)
                     setTimeout(() => {
                         if (divider) divider.classList.add('visible');
-
-                        // 4. Bride row setelah divider (~0.7s)
                         setTimeout(() => {
                             if (bride) bride.classList.add('visible');
                         }, 700);
                     }, 1800);
                 }, 400);
 
-                // Setelah semua muncul, hentikan observer
                 s2TriggerObs.disconnect();
             }
         });
-    }, { threshold: 0.05, root: s2Root });
+    }, { threshold: 0.05, root, rootMargin: '-5% 0px -5% 0px' });
 
-    // Observe slide2 itu sendiri sebagai trigger
     const slide2El = document.getElementById('slide2');
     if (slide2El) s2TriggerObs.observe(slide2El);
-
-    // Observe gl-item elements for gallery entrance animation
-    const glObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                glObserver.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.08,
-        root: document.getElementById('invitation-content')
-    });
-    document.querySelectorAll('.gl-item').forEach(el => glObserver.observe(el));
 }
 
-setTimeout(initObservers, 500);
+// Dipanggil dari openInvitation() di bawah — bukan setTimeout langsung
 
 // Slide .active is now managed by updateActiveBg() scroll handler below
 

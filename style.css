@@ -410,8 +410,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* overflow: hidden dihapus — bg kini fixed, tidak perlu clip */
-    background: transparent;
+    overflow: hidden;
+    /* scroll-snap dihapus — scroll bebas */
 }
 
 #slide3,
@@ -424,29 +424,30 @@ body {
     align-items: flex-start;
 }
 
-/* ===== FIXED CROSSFADE BACKGROUND SYSTEM =====
-   .slide-bg kini position:fixed — tidak ikut scroll.
-   Hanya bg slide aktif yang tampil, sisanya tersembunyi.
-   Transisi opacity halus via CSS. */
+/* Each slide-bg sits absolute within its slide,
+   but we crossfade between them by making the NEXT
+   slide's bg already visible underneath via z-index layering.
+   The seamless effect comes from the slide itself having
+   NO hard border — only soft gradient overlays top & bottom. */
 .slide-bg {
-    position: fixed;
-    inset: 0;
+    position: absolute;
+    inset: -10% 0;
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    will-change: opacity;
+    will-change: transform;
+    transform: translateY(0px);
     z-index: 0;
-    opacity: 0;
-    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
 }
 
+/* Ken Burns dihapus — parallax JS menangani semua gerak */
 .slide.active .slide-bg {
-    opacity: 1;
+    transform: translateY(var(--parallax-y, 0px));
 }
 
-#slide1 .slide-bg {
-    opacity: 1;
+/* Ken Burns dihapus — parallax JS menangani semua gerak */
+.slide.active .slide-bg {
+    transform: translateY(var(--parallax-y, 0px));
 }
 
 .slide-bg-video {
@@ -849,27 +850,19 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
-    background: transparent;
-    /* overflow: hidden dihapus — bg kini fixed */
+    overflow: hidden;
 }
 
-/* s2-bg mengikuti sistem fixed crossfade yang sama dengan .slide-bg */
+/* Background 100% visible — parallax ready */
 .s2-bg {
-    position: fixed;
-    inset: 0;
+    position: absolute;
+    inset: -10% 0;
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    will-change: opacity;
+    will-change: transform;
+    transform: translateY(0px);
     z-index: 0;
-    opacity: 0;
-    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-}
-
-.slide2.active .s2-bg,
-#slide2.active .s2-bg {
-    opacity: 1;
 }
 
 /* Overlay dihapus — background tampil penuh */
@@ -4024,6 +4017,57 @@ body {
     color: #D4AF37;
     margin-top: 4px;
     text-shadow: 0 0 20px rgba(212, 175, 55, .5), 0 2px 0 rgba(0, 0, 0, .8);
+}
+
+/* ===== WARDIGITAL BRAND BLOCK ===== */
+.credits-wardigital {
+    text-align: center;
+    padding: 22px 20px 10px;
+    border-top: 1px solid rgba(212, 175, 55, .25);
+    margin-top: 10px;
+}
+
+.credits-wardigital-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .65);
+    margin-bottom: 6px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, .9);
+}
+
+.credits-wardigital-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #D4AF37;
+    text-shadow: 0 0 24px rgba(212, 175, 55, .6), 0 2px 0 rgba(0, 0, 0, .9);
+    margin-bottom: 10px;
+}
+
+.credits-wardigital-ig {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+    background: rgba(212, 175, 55, .15);
+    border: 1px solid rgba(212, 175, 55, .4);
+    border-radius: 20px;
+    padding: 6px 16px;
+    transition: all .3s;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, .8);
+}
+
+.credits-wardigital-ig:hover {
+    background: rgba(212, 175, 55, .3);
+    border-color: #D4AF37;
+    color: #D4AF37;
 }
 
 /* ===== FOOTER ===== */
