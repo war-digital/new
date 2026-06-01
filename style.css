@@ -410,8 +410,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    /* scroll-snap dihapus — scroll bebas */
+    background: transparent;
 }
 
 #slide3,
@@ -424,30 +423,28 @@ body {
     align-items: flex-start;
 }
 
-/* Each slide-bg sits absolute within its slide,
-   but we crossfade between them by making the NEXT
-   slide's bg already visible underneath via z-index layering.
-   The seamless effect comes from the slide itself having
-   NO hard border — only soft gradient overlays top & bottom. */
+/* ===== FIXED CROSSFADE BACKGROUND =====
+   .slide-bg position:fixed — tidak ikut scroll.
+   Hanya bg slide aktif yang opacity:1, crossfade via CSS transition. */
 .slide-bg {
-    position: absolute;
-    inset: -10% 0;
+    position: fixed;
+    inset: 0;
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    will-change: transform;
-    transform: translateY(0px);
+    will-change: opacity;
     z-index: 0;
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
 }
 
-/* Ken Burns dihapus — parallax JS menangani semua gerak */
 .slide.active .slide-bg {
-    transform: translateY(var(--parallax-y, 0px));
+    opacity: 1;
 }
 
-/* Ken Burns dihapus — parallax JS menangani semua gerak */
-.slide.active .slide-bg {
-    transform: translateY(var(--parallax-y, 0px));
+#slide1 .slide-bg {
+    opacity: 1;
 }
 
 .slide-bg-video {
@@ -850,19 +847,24 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
-    overflow: hidden;
+    background: transparent;
 }
 
-/* Background 100% visible — parallax ready */
 .s2-bg {
-    position: absolute;
-    inset: -10% 0;
+    position: fixed;
+    inset: 0;
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    will-change: transform;
-    transform: translateY(0px);
+    will-change: opacity;
     z-index: 0;
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+#slide2.active .s2-bg {
+    opacity: 1;
 }
 
 /* Overlay dihapus — background tampil penuh */
@@ -3809,7 +3811,7 @@ body {
     top: 100%;
     text-align: center;
     padding: 0 28px;
-    animation: creditsRoll 50s linear infinite;
+    animation: creditsRoll 65s linear forwards;
     animation-play-state: paused;
     will-change: transform;
     opacity: 1 !important;
@@ -3826,7 +3828,7 @@ body {
     }
 
     100% {
-        top: -400%;
+        top: -800%;
     }
 }
 

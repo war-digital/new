@@ -3,20 +3,6 @@ const urlParams = new URLSearchParams(window.location.search);
 const guestName = urlParams.get('to') || 'Tamu Undangan';
 document.getElementById('guestName').textContent = guestName;
 
-// ===== Open Invitation =====
-function openInvitation() {
-    const cover = document.getElementById('cover');
-    const content = document.getElementById('invitation-content');
-    cover.classList.add('opened');
-    content.classList.remove('hidden-content');
-    content.classList.add('show-content');
-    setTimeout(() => { cover.style.display = 'none'; }, 900);
-
-    // Inisialisasi observer SETELAH konten tampil & layout selesai dihitung
-    // Delay 600ms cukup untuk browser selesai render sebelum observer dipasang
-    setTimeout(initObservers, 600);
-}
-
 // ===== Countdown Timer =====
 const weddingDate = new Date('2026-08-15T08:00:00+08:00').getTime();
 function updateCountdown() {
@@ -42,22 +28,17 @@ updateCountdown();
 setInterval(updateCountdown, 1000);
 
 // ===== Scroll Animations =====
-// initObservers dipanggil dari openInvitation() — SETELAH undangan dibuka,
-// bukan saat halaman load. Ini mencegah semua elemen langsung "visible"
-// sebelum user scroll ke slide masing-masing.
+// initObservers dipanggil dari openInvitation() SETELAH undangan dibuka
+// agar observer tidak fire semua elemen sekaligus saat konten baru tampil
 
 function initObservers() {
     const root = document.getElementById('invitation-content');
-
-    // Opsi observer standar — hanya trigger saat elemen benar-benar masuk layar
-    // rootMargin negatif: elemen harus masuk 10% dari atas/bawah viewport dulu
     const obsOpts = {
         threshold: 0.12,
         root,
         rootMargin: '-5% 0px -5% 0px'
     };
 
-    // Observer umum untuk semua kelas animasi
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -68,19 +49,22 @@ function initObservers() {
     }, obsOpts);
 
     document.querySelectorAll(
-        '.anim-fade, .anim-scale, .anim-left, .anim-right, .anim-up, .anim-zoom, .anim-blur, ' +
+        '.anim-fade, .anim-scale, .anim-left, .anim-right, ' +
+        '.anim-up, .anim-zoom, .anim-blur, ' +
         '.pcard, .ev-photo, .s4-card, .gl-item'
     ).forEach(el => observer.observe(el));
 
-    // ===== Slide 1 — elemen pertama langsung visible saat undangan dibuka =====
-    // (sudah di viewport, tidak perlu scroll)
-    document.querySelectorAll('#slide1 .anim-fade, #slide1 .anim-scale, #slide1 .anim-left, #slide1 .anim-right, #slide1 .anim-up, #slide1 .anim-zoom, #slide1 .anim-blur').forEach((el, i) => {
-        setTimeout(() => el.classList.add('visible'), 300 + i * 120);
+    // Slide 1 — langsung visible karena sudah di viewport saat undangan dibuka
+    document.querySelectorAll(
+        '#slide1 .anim-fade, #slide1 .anim-scale, #slide1 .anim-left, ' +
+        '#slide1 .anim-right, #slide1 .anim-up, #slide1 .anim-zoom, #slide1 .anim-blur'
+    ).forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), 300 + i * 150);
     });
 
-    // ===== Slide 2 — Cinematic sequential reveal =====
+    // Slide 2 — cinematic sequential reveal
     let s2Played = false;
-    const s2TriggerObs = new IntersectionObserver((entries) => {
+    const s2Obs = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting && !s2Played) {
                 s2Played = true;
@@ -88,49 +72,64 @@ function initObservers() {
                 const groom = document.querySelector('.s2-profile--groom');
                 const divider = document.querySelector('.s2-divider-wrap');
                 const bride = document.querySelector('.s2-profile--bride');
-
                 if (header) header.classList.add('visible');
                 setTimeout(() => {
                     if (groom) groom.classList.add('visible');
                     setTimeout(() => {
                         if (divider) divider.classList.add('visible');
-                        setTimeout(() => {
-                            if (bride) bride.classList.add('visible');
-                        }, 700);
+                        setTimeout(() => { if (bride) bride.classList.add('visible'); }, 700);
                     }, 1800);
                 }, 400);
-
-                s2TriggerObs.disconnect();
+                s2Obs.disconnect();
             }
         });
     }, { threshold: 0.05, root, rootMargin: '-5% 0px -5% 0px' });
 
     const slide2El = document.getElementById('slide2');
-    if (slide2El) s2TriggerObs.observe(slide2El);
+    if (slide2El) s2Obs.observe(slide2El);
 }
 
-// Dipanggil dari openInvitation() di bawah — bukan setTimeout langsung
+// ===== Open Invitation =====
+function openInvitation() {
+    const cover = document.getElementById('cover');
+    const content = document.getElementById('invitation-content');
+    cover.classList.add('opened');
+    content.classList.remove('hidden-content');
+    content.classList.add('show-content');
+    setTimeout(() => { cover.style.display = 'none'; }, 900);
+    // Observer dipasang SETELAH layout selesai dirender
+    setTimeout(initObservers, 650);
 
-// Slide .active is now managed by updateActiveBg() scroll handler below
+    // Musik fade in
+    if (bgMusic) {
+        bgMusic.volume = 0;
+        bgMusic.play().then(() => {
+            setMusicState(true);
+            let vol = 0;
+            const fadeIn = setInterval(() => {
+                vol = Math.min(vol + 0.05, 0.75);
+                bgMusic.volume = vol;
+                if (vol >= 0.75) clearInterval(fadeIn);
+            }, 120);
+        }).catch(() => setMusicState(false));
+    }
+}
 
 // ===== Nav Dots =====
 const contentEl = document.getElementById('invitation-content');
 const slides = document.querySelectorAll('.slide');
 const dots = document.querySelectorAll('.nav-dot');
 
-// ===== Smooth scroll ke slide via container (bukan window) =====
+// ===== Smooth scroll ke slide =====
 function smoothScrollTo(targetEl, duration) {
     const container = document.getElementById('invitation-content');
     const start = container.scrollTop;
     const end = targetEl.offsetTop;
     const change = end - start;
     const startTime = performance.now();
-
     function ease(t) {
-        // ease in-out cubic — terasa natural, tidak tiba-tiba
         return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
-
     function step(now) {
         const elapsed = now - startTime;
         const progress = Math.min(elapsed / duration, 1);
@@ -146,8 +145,6 @@ dots.forEach(dot => {
         if (target) smoothScrollTo(target, 900);
     });
 });
-
-// nav dot active state synced in updateActiveSlide()
 
 // ===== Gallery Lightbox =====
 function openLightbox(el) {
@@ -208,7 +205,7 @@ function submitMessage(e) {
 
 loadMessages();
 
-// ===== Active Slide Tracker (Ken Burns + nav dots + pcard anim) =====
+// ===== Active Slide Tracker — trigger crossfade background + nav dots =====
 const container = document.getElementById('invitation-content');
 const allSlides = document.querySelectorAll('.slide');
 
@@ -226,7 +223,6 @@ function updateActiveSlide() {
         slide.classList.toggle('active', i === current);
     });
 
-    // sync nav dots
     document.querySelectorAll('.nav-dot').forEach((d, i) =>
         d.classList.toggle('active', i === current));
 }
@@ -240,10 +236,9 @@ let creditsStarted = false;
 
 function startCredits() {
     if (!creditsTrack) return;
-    // Reset animation
     creditsTrack.classList.remove('rolling');
     creditsTrack.style.animation = 'none';
-    creditsTrack.offsetHeight; // force reflow
+    creditsTrack.offsetHeight;
     creditsTrack.style.animation = '';
     creditsTrack.classList.add('rolling');
     creditsStarted = true;
@@ -255,12 +250,8 @@ function checkCreditsSlide() {
     const rect = slide8.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     const isVisible = rect.top < containerRect.bottom - 50 && rect.bottom > containerRect.top + 50;
-    if (isVisible && !creditsStarted) {
-        startCredits();
-    }
-    if (!isVisible) {
-        creditsStarted = false;
-    }
+    if (isVisible && !creditsStarted) startCredits();
+    if (!isVisible) creditsStarted = false;
 }
 
 container.addEventListener('scroll', checkCreditsSlide, { passive: true });
@@ -270,7 +261,6 @@ function initCoverSlideshow() {
     const slides = document.querySelectorAll('.cover-photo-slide');
     if (slides.length === 0) return;
     let currentIndex = 0;
-
     setInterval(() => {
         slides[currentIndex].classList.remove('active');
         currentIndex = (currentIndex + 1) % slides.length;
@@ -278,9 +268,7 @@ function initCoverSlideshow() {
     }, 4000);
 }
 initCoverSlideshow();
-// ===== Parallax dihapus — diganti fixed crossfade background =====
-// Background berganti halus via CSS transition opacity di .slide-bg
-// ketika class .active berpindah antar slide (dihandle updateActiveSlide)
+
 // ===== Background Music =====
 const bgMusic = document.getElementById('bgMusic');
 const musicBtn = document.getElementById('musicBtn');
@@ -307,28 +295,3 @@ function toggleMusic() {
         bgMusic.play().then(() => setMusicState(true)).catch(() => setMusicState(false));
     }
 }
-
-// Mulai musik saat tombol "Buka Undangan" diklik (di dalam user gesture)
-// Override openInvitation agar musik ikut distart
-const _origOpenInvMusic = window.openInvitation;
-window.openInvitation = function () {
-    _origOpenInvMusic && _origOpenInvMusic();
-
-    // Coba putar langsung di dalam gesture (paling bisa di iOS/Android)
-    if (bgMusic) {
-        bgMusic.volume = 0;
-        bgMusic.play().then(() => {
-            setMusicState(true);
-            // Fade in volume pelan-pelan agar tidak mengejutkan
-            let vol = 0;
-            const fadeIn = setInterval(() => {
-                vol = Math.min(vol + 0.05, 0.75);
-                bgMusic.volume = vol;
-                if (vol >= 0.75) clearInterval(fadeIn);
-            }, 120);
-        }).catch(() => {
-            // Kalau masih diblokir, tampilkan tombol musik agar user bisa klik manual
-            setMusicState(false);
-        });
-    }
-};
