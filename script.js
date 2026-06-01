@@ -110,10 +110,10 @@ function initObservers() {
                 s2Played = true;
 
                 // 1. Header langsung muncul
-                const header  = document.querySelector('#slide2 .s2-header');
-                const groom   = document.querySelector('.s2-profile--groom');
+                const header = document.querySelector('#slide2 .s2-header');
+                const groom = document.querySelector('.s2-profile--groom');
                 const divider = document.querySelector('.s2-divider-wrap');
-                const bride   = document.querySelector('.s2-profile--bride');
+                const bride = document.querySelector('.s2-profile--bride');
 
                 if (header) header.classList.add('visible');
 
@@ -326,45 +326,9 @@ function initCoverSlideshow() {
     }, 4000);
 }
 initCoverSlideshow();
-// ===== Parallax Background Scroll =====
-function initParallax() {
-    const scrollEl = document.getElementById('invitation-content');
-
-    function onScroll() {
-        const scrollTop = scrollEl.scrollTop;
-
-        // Handle semua .slide-bg (slide 1,3,4,5,6,7,8)
-        document.querySelectorAll('.slide').forEach(slide => {
-            const bg = slide.querySelector('.slide-bg');
-            if (!bg) return;
-            const relPos = scrollTop - slide.offsetTop;
-            // Parallax ringan — bg bergerak 15% lebih lambat dari konten
-            const parallaxY = relPos * 0.15;
-            bg.style.transform = `translateY(${parallaxY}px)`;
-        });
-
-        // Handle .s2-bg (slide 2 pakai class berbeda)
-        const slide2 = document.getElementById('slide2');
-        if (slide2) {
-            const bg2 = slide2.querySelector('.s2-bg');
-            if (bg2) {
-                const relPos = scrollTop - slide2.offsetTop;
-                const parallaxY = relPos * 0.15;
-                bg2.style.transform = `translateY(${parallaxY}px)`;
-            }
-        }
-    }
-
-    scrollEl.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-}
-
-// Jalankan setelah animasi buka undangan selesai
-const _origOpenInv = window.openInvitation;
-window.openInvitation = function () {
-    _origOpenInv && _origOpenInv();
-    setTimeout(initParallax, 950);
-};
+// ===== Parallax dihapus — diganti fixed crossfade background =====
+// Background berganti halus via CSS transition opacity di .slide-bg
+// ketika class .active berpindah antar slide (dihandle updateActiveSlide)
 // ===== Background Music =====
 const bgMusic = document.getElementById('bgMusic');
 const musicBtn = document.getElementById('musicBtn');
